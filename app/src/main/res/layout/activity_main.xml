@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+    <TextView
+        android:layout_marginTop="90dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:text="이번달 소비"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:id="@+id/monthoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="40dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 원"
+            android:textSize="40dp"/>
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="목표 한도 소비량"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="30dp">
+        <TextView
+            android:id="@+id/oboc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/cate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="분야별 소비"
+            android:layout_marginRight="10dp"/>
+        <Button
+            android:id="@+id/acco"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="계좌별 소비"
+            android:layout_marginRight="10dp"/>
+        <Button
+            android:id="@+id/choboc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="목표 한도 소비량 변경" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="70dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="결제 시뮬테이터"
+        android:textSize="20dp"
+        android:gravity="center"/>
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="2">
+        <Button
+            android:id="@+id/xx_food_3000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="XX 카드\n식비 3000원 결제"/>
+        <Button
+            android:id="@+id/bb_food_5500"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="블랙계좌\n식비 5500원 결제"/>
+        <Button
+            android:id="@+id/xx_play_8500"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="XX카드\n여가 8500원 결제"/>
+        <Button
+            android:id="@+id/bb_play_7000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="블랙계좌\n여가 7000원 결제"/>
+    </GridLayout>
+</LinearLayout>

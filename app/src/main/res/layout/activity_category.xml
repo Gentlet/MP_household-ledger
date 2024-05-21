@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="35dp"
+        android:layout_gravity="left">
+
+        <ImageView
+            android:id="@+id/food_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/food_image" />
+        <TextView
+            android:id="@+id/food_name"
+            android:layout_toRightOf="@+id/food_image"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="식비"
+            android:textSize="25dp"/>
+        <TextView
+            android:id="@+id/food_outcome"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="30dp"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="35dp"
+        android:layout_gravity="left">
+        <ImageView
+            android:id="@+id/play_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/play_image" />
+        <TextView
+            android:id="@+id/play_name"
+            android:layout_toRightOf="@+id/play_image"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="여가"
+            android:textSize="25dp"/>
+        <TextView
+            android:id="@+id/play_outcome"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="30dp"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="back"
+        android:textSize="20dp"
+        android:layout_marginTop="40dp"/>
+
+</LinearLayout>
