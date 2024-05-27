@@ -1,0 +1,11 @@
+[
+  {"name": "Transaction 1", "amount": 100, "date": "2024-05-01"},
+  {"name": "Transaction 2", "amount": 200, "date": "2024-05-02"},
+  {"name": "Transaction 1", "amount": -100, "date": "2024-05-01"},
+  {"name": "Transaction 2", "amount": -200, "date": "2024-05-02"},
+  {"name": "Transaction 1", "amount": 100, "date": "2024-05-01"},
+  {"name": "Transaction 2", "amount": 200, "date": "2024-05-02"},
+  {"name": "Transaction 1", "amount": 100, "date": "2024-05-01"},
+  {"name": "Transaction 2", "amount": 200, "date": "2024-05-02"},
+  {"name": "Transaction 3", "amount": 300, "date": "2024-05-03"}
+]

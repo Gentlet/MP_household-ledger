@@ -1,7 +1,9 @@
 package com.example.appproject
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.appproject.databinding.ActivityCalendarBinding
 import com.example.appproject.databinding.CalendarDayItemBinding
 import com.example.appproject.databinding.CalendarTransactionItemBinding
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 interface DayClickListener {
     fun onDayClick(position: Int)
@@ -24,11 +30,27 @@ class Calendar : AppCompatActivity(), DayClickListener, TransactionClickListener
     private lateinit var binding: ActivityCalendarBinding
     private lateinit var daysList: List<DayItem>
     private lateinit var transactionsList: List<TransactionItem>
+    private var date: Date = Date()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCalendarBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.month.text = getFormattedDate(date)
+        binding.leftMonth.text = " < "
+        binding.rightMonth.text = " > "
+
+        binding.leftMonth.setOnClickListener {
+            setDateToPrevMonth()
+        }
+        binding.rightMonth.setOnClickListener {
+            setDateToNextMonth()
+        }
+
+
+        transactionsList = filterTransactionsByDate(JsonUtil.readJsonFromAssets(this, "transactions.json"), date)
+
 
         // 상단의 달력 RecyclerView 설정
         binding.recyclerView.layoutManager = GridLayoutManager(this, 7)
@@ -38,30 +60,86 @@ class Calendar : AppCompatActivity(), DayClickListener, TransactionClickListener
 
         // 하단의 목록 RecyclerView 설정
         binding.recyclerViewList.layoutManager = LinearLayoutManager(this)
-        transactionsList = generateTransactionsList()
+
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+
         val transAdapter = TransactionsAdapter(transactionsList, this)
         binding.recyclerViewList.adapter = transAdapter
     }
 
     private fun generateDaysList(): List<DayItem> {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+
         val days = mutableListOf<DayItem>()
-        for (i in 1..31) {
-            days.add(DayItem(i.toString(), "Event $i"))
+        for (i in 1..calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+            days.add(DayItem(filterTransactionsByDate(transactionsList, calendar.time, i)))
         }
         return days
     }
 
-    private fun generateTransactionsList(): List<TransactionItem> {
-        val transactions = mutableListOf<TransactionItem>()
-        for (i in 1..20) {
-            transactions.add(TransactionItem(i.toString(), "Event $i"))
+    private fun filterTransactionsByDate(transactions: List<TransactionItem>, date: Date, d:Int = -1): List<TransactionItem> {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        val targetYear = calendar.get(Calendar.YEAR)
+        val targetMonth = calendar.get(Calendar.MONTH) + 1 // Calendar.MONTH is zero-based
+
+        return transactions.filter { transaction ->
+            calendar.time = transaction.date
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH) + 1
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+            year == targetYear && month == targetMonth && (day == d || d == -1)
         }
-        return transactions
+    }
+
+    private fun setDateToNextMonth() {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.add(Calendar.MONTH, 1)
+        date = calendar.time
+        binding.month.text = getFormattedDate(date)
+
+        // Update the transactions list based on the new date
+        transactionsList = filterTransactionsByDate(JsonUtil.readJsonFromAssets<TransactionItem>(this, "transactions.json"), date)
+
+        daysList = generateDaysList()
+        val calendarAdapter = CalendarAdapter(daysList, this)
+        binding.recyclerView.adapter = calendarAdapter
+
+        val transAdapter = TransactionsAdapter(transactionsList, this)
+        binding.recyclerViewList.adapter = transAdapter
+    }
+    private fun setDateToPrevMonth() {
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.add(Calendar.MONTH, -1)
+        date = calendar.time
+        binding.month.text = getFormattedDate(date)
+
+        // Update the transactions list based on the new date
+        transactionsList = filterTransactionsByDate(JsonUtil.readJsonFromAssets<TransactionItem>(this, "transactions.json"), date)
+
+        daysList = generateDaysList()
+        val calendarAdapter = CalendarAdapter(daysList, this)
+        binding.recyclerView.adapter = calendarAdapter
+
+        val transAdapter = TransactionsAdapter(transactionsList, this)
+        binding.recyclerViewList.adapter = transAdapter
+    }
+
+    private fun getFormattedDate(date: Date, format:String = "yyyy.MM"): String {
+        val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+        return dateFormat.format(date)
     }
 
     override fun onDayClick(position: Int) {
         val calendarAdapter = binding.recyclerView.adapter as CalendarAdapter
         calendarAdapter.setSelectedPosition(position)
+
+        val transAdapter = TransactionsAdapter(daysList[position].transactionList, this)
+        binding.recyclerViewList.adapter = transAdapter
     }
 
     override fun onTransactionClick(position: Int) {
@@ -70,7 +148,7 @@ class Calendar : AppCompatActivity(), DayClickListener, TransactionClickListener
     }
 }
 
-data class DayItem(val date: String, val event: String)
+data class DayItem(val transactionList: List<TransactionItem>)
 
 class CalendarAdapter(
     private val daysList: List<DayItem>,
@@ -101,17 +179,37 @@ class CalendarAdapter(
         notifyItemChanged(selectedPosition)
     }
 
+
     class CalendarViewHolder(val binding: CalendarDayItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(dayItem: DayItem, clickListener: DayClickListener, position: Int) {
-            binding.tvDate.text = dayItem.date
+            binding.tvDate.text = (position + 1).toString()
+            binding.income.text = "+ " + getAllIncome(dayItem.transactionList).toString()
+            binding.spending.text = "- " + getAllSpending(dayItem.transactionList).toString()
             binding.root.setOnClickListener {
                 clickListener.onDayClick(position)
             }
         }
+
+        private fun getAllIncome(transactionList: List<TransactionItem>): Int {
+            var result = 0
+            for (trans in transactionList) {
+                if(trans.amount > 0)
+                    result += trans.amount
+            }
+
+            return result
+        }
+        private fun getAllSpending(transactionList: List<TransactionItem>): Int {
+            var result = 0
+            for (trans in transactionList) {
+                if(trans.amount < 0)
+                    result += trans.amount
+            }
+
+            return result
+        }
     }
 }
-
-data class TransactionItem(val name: String, val event: String)
 
 class TransactionsAdapter(
     private val transactionsList: List<TransactionItem>,
@@ -144,9 +242,17 @@ class TransactionsAdapter(
 
     class TransactionViewHolder(val binding: CalendarTransactionItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(trans: TransactionItem, clickListener: TransactionClickListener, position: Int) {
-            binding.name.text = "${trans.name} : ${trans.event}"
+            binding.name.text = "${trans.name} : ${trans.amount}"
             binding.root.setOnClickListener {
                 clickListener.onTransactionClick(position)
+
+                val context = binding.root.context
+
+                val intent = Intent(context, TransactionDetailActivity::class.java).apply {
+                    putExtra("name", trans.name)
+                    putExtra("event", trans.amount.toString())
+                }
+                context.startActivity(intent)
             }
         }
     }
