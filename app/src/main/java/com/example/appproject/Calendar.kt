@@ -49,7 +49,7 @@ class Calendar : AppCompatActivity(), DayClickListener, TransactionClickListener
         }
 
 
-        transactionsList = filterTransactionsByDate(JsonUtil.readJsonFromAssets(this, "transactions.json"), date)
+        transactionsList = JsonUtil.filterTransactionsByDate(JsonUtil.readJsonFromFile(this, "transactions.json"), date)
 
 
         // 상단의 달력 RecyclerView 설정
@@ -74,24 +74,9 @@ class Calendar : AppCompatActivity(), DayClickListener, TransactionClickListener
 
         val days = mutableListOf<DayItem>()
         for (i in 1..calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-            days.add(DayItem(filterTransactionsByDate(transactionsList, calendar.time, i)))
+            days.add(DayItem(JsonUtil.filterTransactionsByDate(transactionsList, calendar.time, i)))
         }
         return days
-    }
-
-    private fun filterTransactionsByDate(transactions: List<TransactionItem>, date: Date, d:Int = -1): List<TransactionItem> {
-        val calendar = Calendar.getInstance()
-        calendar.time = date
-        val targetYear = calendar.get(Calendar.YEAR)
-        val targetMonth = calendar.get(Calendar.MONTH) + 1 // Calendar.MONTH is zero-based
-
-        return transactions.filter { transaction ->
-            calendar.time = transaction.date
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH) + 1
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-            year == targetYear && month == targetMonth && (day == d || d == -1)
-        }
     }
 
     private fun setDateToNextMonth() {
@@ -102,7 +87,7 @@ class Calendar : AppCompatActivity(), DayClickListener, TransactionClickListener
         binding.month.text = getFormattedDate(date)
 
         // Update the transactions list based on the new date
-        transactionsList = filterTransactionsByDate(JsonUtil.readJsonFromAssets<TransactionItem>(this, "transactions.json"), date)
+        transactionsList = JsonUtil.filterTransactionsByDate(JsonUtil.readJsonFromFile(this, "transactions.json"), date)
 
         daysList = generateDaysList()
         val calendarAdapter = CalendarAdapter(daysList, this)
@@ -119,7 +104,7 @@ class Calendar : AppCompatActivity(), DayClickListener, TransactionClickListener
         binding.month.text = getFormattedDate(date)
 
         // Update the transactions list based on the new date
-        transactionsList = filterTransactionsByDate(JsonUtil.readJsonFromAssets<TransactionItem>(this, "transactions.json"), date)
+        transactionsList = JsonUtil.filterTransactionsByDate(JsonUtil.readJsonFromFile(this, "transactions.json"), date)
 
         daysList = generateDaysList()
         val calendarAdapter = CalendarAdapter(daysList, this)
@@ -250,7 +235,9 @@ class TransactionsAdapter(
 
                 val intent = Intent(context, TransactionDetailActivity::class.java).apply {
                     putExtra("name", trans.name)
-                    putExtra("event", trans.amount.toString())
+                    putExtra("amount", trans.amount.toString())
+                    putExtra("card", trans.card)
+                    putExtra("type", trans.type)
                 }
                 context.startActivity(intent)
             }

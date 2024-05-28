@@ -1,11 +1,9 @@
 [
-  {"name": "Transaction 1", "amount": 100, "date": "2024-05-01"},
-  {"name": "Transaction 2", "amount": 200, "date": "2024-05-02"},
-  {"name": "Transaction 1", "amount": -100, "date": "2024-05-01"},
-  {"name": "Transaction 2", "amount": -200, "date": "2024-05-02"},
-  {"name": "Transaction 1", "amount": 100, "date": "2024-05-01"},
-  {"name": "Transaction 2", "amount": 200, "date": "2024-05-02"},
-  {"name": "Transaction 1", "amount": 100, "date": "2024-05-01"},
-  {"name": "Transaction 2", "amount": 200, "date": "2024-05-02"},
-  {"name": "Transaction 3", "amount": 300, "date": "2024-05-03"}
+  {"name": "Transaction 1", "amount": 100, "date": "2024-04-01", "card": "XX Card", "type": "play"},
+  {"name": "Transaction 2", "amount": 200, "date": "2024-04-02", "card": "XX Card", "type": "play"},
+  {"name": "Transaction 1", "amount": 100, "date": "2024-04-01", "card": "XX Card", "type": "play"},
+  {"name": "Transaction 2", "amount": 200, "date": "2024-04-02", "card": "XX Card", "type": "play"},
+  {"name": "Transaction 1", "amount": 100, "date": "2024-04-01", "card": "XX Card", "type": "play"},
+  {"name": "Transaction 2", "amount": 200, "date": "2024-04-02", "card": "XX Card", "type": "play"},
+  {"name": "Transaction 3", "amount": 300, "date": "2024-04-03", "card": "Black Card", "type": "food"}
 ]

@@ -17,11 +17,19 @@ class TransactionDetailActivity : Activity() {
         setContentView(binding.root)
 
         val name = intent.getStringExtra("name")
-        val event = intent.getStringExtra("event")
+        val amount = intent.getStringExtra("amount")
+        val card = intent.getStringExtra("card")
+        val type = intent.getStringExtra("type")
 
 
-        binding.transactionName.text = name
-        binding.transactionEvent.text = event
+        binding.transactionName.text = "이름 : " + name
+        binding.transactionEvent.text = "가격 : " + amount
+        binding.transactionCard.text = "가격 : " + card
+        if (type == "food")
+            binding.transactionType.text = "분야 : " + "식비"
+        else
+            binding.transactionType.text = "분야 : " + "여가"
+
 
         binding.exitBtn.setOnClickListener {
             finish()

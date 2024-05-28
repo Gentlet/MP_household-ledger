@@ -68,9 +68,14 @@
             android:layout_height="wrap_content"
             android:text="목표 한도 소비량 변경" />
     </LinearLayout>
+    <Button
+        android:id="@+id/calendar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="일별 소비량 확인" />
 
     <TextView
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="결제 시뮬테이터"
