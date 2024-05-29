@@ -40,7 +40,7 @@ object JsonUtil {
     inline fun readJsonFromFile(context: Context, fileName: String): MutableList<TransactionItem> {
         val file = File(context.filesDir, fileName)
         if (!file.exists()) {
-            return ArrayList()
+            return readJsonFromAssets(context, fileName)
         }
 
         val gson = GsonBuilder()
